@@ -3,10 +3,10 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-const mongoose = require('mongoose')
+var mongoose = require('mongoose')
 
 var indexRouter = require('./routes/index');
-//var usersRouter = require('./routes/users');
+var usersRouter = require('./routes/user.router')
 const questionnaireRouter = require('./routes/questionnaire')
 const questionRouter = require('./routes/question.router')
 const answerRouter = require('./routes/answer.router')
@@ -25,6 +25,7 @@ db.on('error', console.error.bind(console, 'MongoDB connection eror'))
 
 // view engine setup
 app.set('view engine', 'pug');
+
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(logger('dev'));
@@ -34,6 +35,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+app.use('/user', usersRouter)
 app.use('/questionnaire', questionnaireRouter)
 app.use('/question', questionRouter);
 app.use('/answer', answerRouter)
