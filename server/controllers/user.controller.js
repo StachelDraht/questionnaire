@@ -15,6 +15,7 @@ exports.create = function(req, res) {
             res.json({err:err})
             return
         }
-        res.send('User created')
+        const token = newUser.generateAuthToken()
+        res.send(newUser)
     })
 }
