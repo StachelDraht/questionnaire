@@ -35,4 +35,17 @@ UserSchema.methods.generateAuthToken = async function() {
     return token
 }
 
-module.exports = mongoos.model('User', UserSchema)
+UserSchema.statics.findByCredentials = async (username, password) => {
+    const user = User.findOne({username})
+    if(!user) {
+        throw new Error({error: 'Invalid login credentials'})
+    }
+    /*const isPasswordPatch = await bcrypt.compare(password, user.password)
+    if(!isPasswordPatch) {
+        throw new Error({error: 'Wrong pass'})
+    }*/
+    return user
+}
+
+const User = mongoos.model('User', UserSchema)
+module.exports = User
