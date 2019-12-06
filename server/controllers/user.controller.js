@@ -1,24 +1,18 @@
 const User = require('../models/user.model')
-const bcrypt = require('bcryptjs')
 
 exports.login = function(req, res) {
     res.json()
 }
 
-exports.create = function(req, res) {
-    let newUser = new User({
-        username: req.body.username,
-        email: req.body.email,
-        password: req.body.password
-    })
-    newUser.save(err => {
-        if(err) {
-            res.json({err:err})
-            return
-        }
-        const token = newUser.generateAuthToken()
-        res.send(newUser)
-    })
+exports.create = async function(req, res) {
+    try {
+        const user = new User(req.body)
+        await user.save()
+        const token = await user.generateAuthToken()
+        res.status(201).send({user, token})
+    } catch (error) {
+        res.status(400).send(er)
+    }
 }
 
 exports.login = async function(req, res) {
@@ -27,6 +21,6 @@ exports.login = async function(req, res) {
     if(!user) {
         return res.status(400).json({error: 'Login failed'})
     }
-    const token = await User.generateAuthToken()
-    red.json({user: user, token: token})
+    const token = await user.generateAuthToken()
+    res.json({user: user, token: token})
 }
