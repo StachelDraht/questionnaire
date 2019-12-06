@@ -1,3 +1,3 @@
 module.exports= {
-    tokenKey:"kakajatohernja"
+    tokenKey:"ctjx2edSKroI0DpapCZ3"
 }

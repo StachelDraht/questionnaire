@@ -10,5 +10,8 @@ router.get('/', function(req, res, next) {
 
 router.post('/create', userController.create)
 router.post('/login', userController.login)
+router.get('/me', userController.auth, userController.me)
+router.post('/me/logout', userController.auth, userController.logout)
+router.post('/me/logoutall', userController.auth, userController.logoutAll)
 
 module.exports = router;
