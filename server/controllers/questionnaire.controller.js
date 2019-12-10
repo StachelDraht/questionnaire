@@ -26,7 +26,7 @@ exports.getQuestionnaire = function(req, res) {
     let questionnaire
     Questionnaire.findById(req.params.id, function(err, data) {
         if(err) {
-            res.json({'Error':err})
+            res.status(404).json({'Error':err})
             return
         }
         questionnaire = data
