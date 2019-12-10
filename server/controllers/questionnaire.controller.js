@@ -27,6 +27,7 @@ exports.getQuestionnaire = function(req, res) {
     Questionnaire.findById(req.params.id, function(err, data) {
         if(err) {
             res.json({'Error':err})
+            return
         }
         questionnaire = data
         Question.find({questionnaire:data.uniqueName},null,{sort: {order: 'ascending'}}, function(err, docs){
