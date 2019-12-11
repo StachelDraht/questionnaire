@@ -1,3 +1,4 @@
+var cors = require('cors')
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -25,6 +26,8 @@ db.on('error', console.error.bind(console, 'MongoDB connection eror'))
 
 // view engine setup
 app.set('view engine', 'pug');
+
+app.use(cors())
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: false}))
