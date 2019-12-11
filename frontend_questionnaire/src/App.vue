@@ -14,7 +14,7 @@
             sm="8"
             md="4"
           >
-            <v-card class="elevation-12">
+            <v-card class="elevation-12" v-if="loader">
               <v-toolbar
                 color="primary"
                 dark
@@ -70,15 +70,20 @@
                 <v-stepper v-model="e6" vertical>
                   <!-- start -->
                   <div v-for="question in questions" :key="question._id">
-                    <v-stepper-step :complete="questions.length > 1" step="1" :key="question._id">
-                      {{ question.question }}
-                      <small>Summarize if needed</small>
+                    <v-stepper-step :complete="e6 > question.order" :step="question.order">
+                      <small><b>{{ question.question }}</b></small>
                     </v-stepper-step>
 
-                    <v-stepper-content step="1">
-                      <v-card color="grey lighten-1" class="mb-12" height="200px"></v-card>
-                      <v-btn color="primary" @click="e6 = 2">Continue</v-btn>
-                      <v-btn text>Cancel</v-btn>
+                    <v-stepper-content :step="question.order">
+                      <v-card elevation="0">
+                        <component v-bind:is="'type'+question.type"></component>
+                        <v-card-actions>
+                          <v-btn small color="primary" @click="e6 = question.order+1" v-if="question.order != questions.length">Next</v-btn> <v-spacer />
+                          <v-btn small color="primary" @click="e6 = question.order-1" v-if="question.order > 1">Prev</v-btn>
+                        </v-card-actions>
+                      </v-card>
+                      
+                      <!--<v-btn text>Cancel</v-btn>-->
                     </v-stepper-content>
                   </div>
                   <!-- end -->
@@ -98,18 +103,24 @@
                     <v-btn text>Cancel</v-btn>
                   </v-stepper-content>
 
-                  <v-stepper-step step="4">View setup instructions</v-stepper-step>-->
+                  <v-stepper-step step="4">View setup instructions</v-stepper-step>
                   <v-stepper-content step="4">
                     <v-card color="grey lighten-1" class="mb-12" height="200px"></v-card>
                     <v-btn color="primary" @click="e6 = 1">Next</v-btn>
                     <v-btn text>Cancel</v-btn>
-                  </v-stepper-content>
+                  </v-stepper-content>-->
                 </v-stepper>
               </v-card-text>
               <v-card-actions>
                 <v-spacer />
-                <v-btn color="primary">Answer</v-btn>
+                <!--<v-btn color="primary">Answer</v-btn>-->
               </v-card-actions>
+            </v-card>
+            <v-card v-if="!loader">
+               <v-progress-linear
+                indeterminate
+                color="yellow darken-2"
+              ></v-progress-linear>
             </v-card>
           </v-col>
         </v-row>
@@ -119,25 +130,38 @@
 </template>
 
 <script>
+  import typetext from './components/typeText'
+  import typerate from './components/typeRate.vue'
   import {api} from './data/axios.base'
+
   export default {
     data() {
       return {
         e6: 1,
         questionnaireTitle: '',
-        questions: []
+        questions: [],
+        loader: false,
       }
     },
     props: {
       source: String,
     },
+    components: {
+      'typetext': typetext,
+      'typerate': typerate
+    },
     created: function() {
-      api.get('questionnaire/5de61d079324c384b484a400').then(data => {
-        //console.log(data.data.questions)
+      console.log(this.$route)
+      api.get('questionnaire/5de61d079324c384b484a400').
+      then(data => {
         this.questionnaireTitle = data.data.questionnaire.name
         this.questions = data.data.questions
-        console.log(this.questions)
       })
+      .then(() => {
+        this.loader = true
+      })
+    },
+    computed: {
     }
   }
 </script>
