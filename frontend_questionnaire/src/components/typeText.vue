@@ -7,7 +7,7 @@
 <script>
 export default {
   data: () => ({
-    textArea: 'hei'
+    textArea: ''
   }),
   props: {
       questionId: String

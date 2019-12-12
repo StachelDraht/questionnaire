@@ -22,53 +22,10 @@
               >
                 <v-toolbar-title>{{ questionnaireTitle }}</v-toolbar-title>
                 <v-spacer />
-                <!--<v-tooltip bottom>
-                  <template v-slot:activator="{ on }">
-                    <v-btn
-                      :href="source"
-                      icon
-                      large
-                      target="_blank"
-                      v-on="on"
-                    >
-                      <v-icon>mdi-code-tags</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Source</span>
-                </v-tooltip>
-                <v-tooltip right>
-                  <template v-slot:activator="{ on }">
-                    <v-btn
-                      icon
-                      large
-                      href="https://codepen.io/johnjleider/pen/pMvGQO"
-                      target="_blank"
-                      v-on="on"
-                    >
-                      <v-icon>mdi-codepen</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Codepen</span>
-                </v-tooltip>-->
               </v-toolbar>
               <v-card-text>
-                <!--<v-form>
-                  <v-text-field
-                    label="Login"
-                    name="login"
-                    type="text"
-                  />
-                  <v-text-field
-                    id="password"
-                    label="Password"
-                    name="password"
-                    prepend-icon="done"
-                    type="password"
-                  />
-                </v-form>-->
                 <v-form ref="form">
                 <v-stepper v-model="e6" vertical>
-                  <!-- start -->
                   <div v-for="question in questions" :key="question._id">
                     <v-stepper-step :complete="e6 > question.order" :step="question.order">
                       <small><b>{{ question.question }}</b></small>
@@ -83,35 +40,12 @@
                           <v-btn small color="primary" @click="e6 = question.order-1" v-if="question.order > 1">Prev</v-btn>
                         </v-card-actions>
                       </v-card>
-                      
-                      <!--<v-btn text>Cancel</v-btn>-->
                     </v-stepper-content>
                   </div>
-                  <!-- end -->
-                  <!--<v-stepper-step :complete="e6 > 2" step="2">Configure analytics for this app</v-stepper-step>
-                  <v-stepper-content step="2">
-                    <v-card color="grey lighten-1" class="mb-12" height="200px"></v-card>
-                    <v-btn color="primary" @click="e6 = 3">Continue</v-btn>
-                    <v-btn text>Cancel</v-btn>
-                  </v-stepper-content>
-                  <v-stepper-step :complete="e6 > 3" step="3">Select an ad format and name ad unit</v-stepper-step>
-                  <v-stepper-content step="3">
-                    <v-card color="grey lighten-1" class="mb-12" height="200px"></v-card>
-                    <v-btn color="primary" @click="e6 = 4">Continue</v-btn>
-                    <v-btn text>Cancel</v-btn>
-                  </v-stepper-content>
-                  <v-stepper-step step="4">View setup instructions</v-stepper-step>
-                  <v-stepper-content step="4">
-                    <v-card color="grey lighten-1" class="mb-12" height="200px"></v-card>
-                    <v-btn color="primary" @click="e6 = 1">Next</v-btn>
-                    <v-btn text>Cancel</v-btn>
-                  </v-stepper-content>-->
                 </v-stepper>
                 </v-form>
               </v-card-text>
               <v-card-actions>
-                <v-spacer />
-                <!--<v-btn color="primary">Answer</v-btn>-->
               </v-card-actions>
             </v-card>
             <v-card v-if="!loader">
@@ -150,11 +84,11 @@
     },
     methods: {
       sendAnswers: function() {
-        console.log(this.$store.getters.getAnswers)
+        //console.log(this.$store.getters.getAnswers)
         let formData = this.$store.getters.getAnswers
-        api.post(`questionnaire/makeanswer`, {data: formData})
+        api.post(`answer/makeanswers`, {questionnaireId: this.questionnaireId, answers: formData})
         .then(data => {
-          console.log(data.data)
+          data
         })
       }
     },
@@ -164,6 +98,7 @@
       then(data => {
         this.questionnaireTitle = data.data.questionnaire.name
         this.questions = data.data.questions
+        this.questionnaireId = data.data.questionnaire._id
       })
       .then(() => {
         this.loader = true

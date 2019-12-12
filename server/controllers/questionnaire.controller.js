@@ -53,7 +53,3 @@ exports.createQuestion = function(req, res) {
         }
     })
 }
-
-exports.makeAnswer = function(req, res) {
-    res.json({'message':'recieved'})
-}

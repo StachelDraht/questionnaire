@@ -8,4 +8,14 @@ let QuestionSchema = new Schmena({
     type: {type: String, require: true}
 })
 
-module.exports = mongoose.model('Question', QuestionSchema)
+QuestionSchema.statics.questionsCount = async function(questionnaireId) {
+    Question.countDocuments({questionnaire: questionnaireId}, function(error, count) {
+        if(error) {
+            throw new Error({error: error})
+        }
+        return count
+    })
+}
+
+const Question = mongoose.model('Question', QuestionSchema)
+module.exports = Question
