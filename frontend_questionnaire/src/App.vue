@@ -136,7 +136,7 @@
       return {
         e6: 1,
         questionnaireTitle: '',
-        questions: [],
+        questions: '',
         loader: false,
         questionnaireId: ''
       }
@@ -150,11 +150,12 @@
     },
     methods: {
       sendAnswers: function() {
-        console.log('hello')
-        this.questions.forEach(element => {
-          console.log(element)
-          console.log(this.$refs.form)
-        });
+        console.log(this.$store.getters.getAnswers)
+        let formData = this.$store.getters.getAnswers
+        api.post(`questionnaire/makeanswer`, {data: formData})
+        .then(data => {
+          console.log(data.data)
+        })
       }
     },
     created: function() {

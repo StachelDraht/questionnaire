@@ -11,6 +11,14 @@ export default {
     }),
     props: {
         questionId: String
+    },
+    watch: {
+        rating: function(){
+            this.$store.dispatch('addAnswer', {
+                questionId: this.questionId,
+                answer: this.rating
+            })
+        }
     }
 }
 </script>
