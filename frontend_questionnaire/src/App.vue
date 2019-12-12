@@ -66,6 +66,7 @@
                     type="password"
                   />
                 </v-form>-->
+                <v-form ref="form">
                 <v-stepper v-model="e6" vertical>
                   <!-- start -->
                   <div v-for="question in questions" :key="question._id">
@@ -75,8 +76,9 @@
 
                     <v-stepper-content :step="question.order">
                       <v-card elevation="0">
-                        <component v-bind:is="'type'+question.type"></component>
+                        <component v-bind:is="'type'+question.type" v-bind:questionId="question._id"></component>
                         <v-card-actions>
+                          <v-btn small color="primary" @click="sendAnswers" v-if="question.order == questions.length">Send</v-btn>
                           <v-btn small color="primary" @click="e6 = question.order+1" v-if="question.order != questions.length">Next</v-btn> <v-spacer />
                           <v-btn small color="primary" @click="e6 = question.order-1" v-if="question.order > 1">Prev</v-btn>
                         </v-card-actions>
@@ -105,6 +107,7 @@
                     <v-btn text>Cancel</v-btn>
                   </v-stepper-content>-->
                 </v-stepper>
+                </v-form>
               </v-card-text>
               <v-card-actions>
                 <v-spacer />
@@ -135,6 +138,7 @@
         questionnaireTitle: '',
         questions: [],
         loader: false,
+        questionnaireId: ''
       }
     },
     props: {
@@ -144,9 +148,18 @@
       'typetext': typetext,
       'typerate': typerate
     },
+    methods: {
+      sendAnswers: function() {
+        console.log('hello')
+        this.questions.forEach(element => {
+          console.log(element)
+          console.log(this.$refs.form)
+        });
+      }
+    },
     created: function() {
-      console.log(this.$route)
-      api.get('questionnaire/5de61d079324c384b484a400').
+      this.questionnaireId = this.$route.params.id
+      api.get(`questionnaire/${this.questionnaireId}`).
       then(data => {
         this.questionnaireTitle = data.data.questionnaire.name
         this.questions = data.data.questions
@@ -154,8 +167,6 @@
       .then(() => {
         this.loader = true
       })
-    },
-    computed: {
     }
   }
 </script>
