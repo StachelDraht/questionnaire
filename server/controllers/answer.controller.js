@@ -20,10 +20,32 @@ exports.main = function(req, res) {
 }
 
 exports.makeAnswers = async function(req, res) {
-    let questionnaire = await Questionnaire.findById(req.body.questionId)
+    await Questionnaire.findOne(req.body.questionId)
         .then(data => {
-            console.log(data)
+            Question.countDocuments({questionnaire: data.uniqueName})
+                .then(expectedAnswers => {
+                    if(expectedAnswers == Object.keys(req.body.answers).length) {
+                        Object.entries(req.body.answers).forEach((entry) => {
+                            const [key, val] = entry
+                            new Answer({
+                                questionId: key,
+                                answerText: val
+                            }).save(err => {
+                                if(err) {
+                                    res.json({error: err})
+                                    return
+                                }
+                            })
+                        })
+                        res.status(200).json({message:'done'})
+                        return
+                    } else {
+                        res.status(200).send('not enought answers')
+                    }
+                }).catch(e => {
+                    throw new Error({error: e})
+                })
+        }).catch(e => {
+            console.log(e)
         })
-    //let expectAnswers = await Question.questionsCount(req.body.questionnaireId)
-    res.status(200).send('ok')
 }

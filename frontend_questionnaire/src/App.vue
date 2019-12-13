@@ -51,7 +51,7 @@
             <v-card v-if="!loader">
                <v-progress-linear
                 indeterminate
-                color="yellow darken-2"
+                color="blue darken-2"
               ></v-progress-linear>
             </v-card>
           </v-col>
