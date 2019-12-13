@@ -10,7 +10,6 @@ exports.makeAnswer = function(req, res) {
     newAnswer.save(err => {
         if(err) {
             res.send(err)
-            return
         }
         res.send('Done')
     })
@@ -33,16 +32,15 @@ exports.makeAnswers = async function(req, res) {
                             }).save(err => {
                                 if(err) {
                                     res.json({error: err})
-                                    return
                                 }
                             })
                         })
                         res.status(200).json({message:'done'})
-                        return
                     } else {
                         res.status(200).send('not enought answers')
                     }
-                }).catch(e => {
+                })
+                .catch(e => {
                     throw new Error({error: e})
                 })
         }).catch(e => {
