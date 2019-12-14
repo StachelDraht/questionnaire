@@ -14,6 +14,15 @@
             sm="8"
             md="4"
           >
+            <v-alert
+              border="right"
+              colored-border
+              type="error"
+              elevation="2"
+              v-if="error.active"
+            >
+              {{ error.message}}
+            </v-alert>
             <v-card class="elevation-12" v-if="loader">
               <v-toolbar
                 color="primary"
@@ -72,7 +81,12 @@
         questionnaireTitle: '',
         questions: '',
         loader: false,
-        questionnaireId: ''
+        questionnaireId: '',
+        error: {
+          type: 'error',
+          message: 'error',
+          active: false
+        }
       }
     },
     props: {
@@ -84,7 +98,6 @@
     },
     methods: {
       sendAnswers: function() {
-        //console.log(this.$store.getters.getAnswers)
         let formData = this.$store.getters.getAnswers
         api.post(`answer/makeanswers`, {questionnaireId: this.questionnaireId, answers: formData})
         .then(data => {
@@ -102,6 +115,10 @@
       })
       .then(() => {
         this.loader = true
+      })
+      .catch((err) => {
+        this.error.message = err
+        this.error.active = true
       })
     }
   }
