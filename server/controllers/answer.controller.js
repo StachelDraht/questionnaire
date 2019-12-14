@@ -35,9 +35,9 @@ exports.makeAnswers = async function(req, res) {
                                 }
                             })
                         })
-                        res.status(200).json({message:'done'})
+                        res.status(200).json({status:'success', message: 'ok'})
                     } else {
-                        res.status(200).send('not enought answers')
+                        res.status(200).json({status: 'warning', message: 'Not enought questions'})
                     }
                 })
                 .catch(e => {
