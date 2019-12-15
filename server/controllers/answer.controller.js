@@ -10,7 +10,6 @@ exports.makeAnswer = function(req, res) {
     newAnswer.save(err => {
         if(err) {
             res.send(err)
-            return
         }
         res.send('Done')
     })
@@ -33,19 +32,23 @@ exports.makeAnswers = async function(req, res) {
                             }).save(err => {
                                 if(err) {
                                     res.json({error: err})
-                                    return
                                 }
                             })
                         })
-                        res.status(200).json({message:'done'})
-                        return
+                        res.status(200).json({status:'success', message: 'Thank you!'})
                     } else {
-                        res.status(200).send('not enought answers')
+                        res.status(200).json({status: 'warning', message: 'Not enought questions'})
                     }
-                }).catch(e => {
+                })
+                .catch(e => {
                     throw new Error({error: e})
                 })
         }).catch(e => {
             console.log(e)
         })
+}
+
+exports.checkToken = async function(req, res, next) {
+    console.log('Checktoken')
+    next()
 }

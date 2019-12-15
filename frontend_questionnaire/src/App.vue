@@ -17,13 +17,13 @@
             <v-alert
               border="right"
               colored-border
-              type="error"
+              :type="alert.status"
               elevation="2"
-              v-if="error.active"
+              v-if="alert.active"
             >
-              {{ error.message}}
+              {{ alert.message}}
             </v-alert>
-            <v-card class="elevation-12" v-if="loader">
+            <v-card class="elevation-12" v-if="questionnairePlace">
               <v-toolbar
                 color="primary"
                 dark
@@ -82,11 +82,12 @@
         questions: '',
         loader: false,
         questionnaireId: '',
-        error: {
-          type: 'error',
-          message: 'error',
+        alert: {
+          status: '',
+          message: '',
           active: false
-        }
+        },
+        questionnairePlace: false
       }
     },
     props: {
@@ -101,7 +102,11 @@
         let formData = this.$store.getters.getAnswers
         api.post(`answer/makeanswers`, {questionnaireId: this.questionnaireId, answers: formData})
         .then(data => {
-          data
+          this.alert = data.data
+          this.alert.active = true
+          if(data.data.status == 'success') {
+            this.questionnairePlace = false
+          }
         })
       }
     },
@@ -115,10 +120,13 @@
       })
       .then(() => {
         this.loader = true
+        this.questionnairePlace = true
       })
       .catch((err) => {
-        this.error.message = err
-        this.error.active = true
+        this.alert.message = err
+        this.alert.status = 'error'
+        this.alert.active = true
+        this.loader = true
       })
     }
   }
