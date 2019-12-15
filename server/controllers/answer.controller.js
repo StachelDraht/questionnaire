@@ -50,5 +50,6 @@ exports.makeAnswers = async function(req, res) {
 
 exports.checkToken = async function(req, res, next) {
     console.log('Checktoken')
+    console.log(req.connection.remoteAddress)
     next()
 }
