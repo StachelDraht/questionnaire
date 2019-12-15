@@ -35,7 +35,7 @@ exports.makeAnswers = async function(req, res) {
                                 }
                             })
                         })
-                        res.status(200).json({status:'success', message: 'ok'})
+                        res.status(200).json({status:'success', message: 'Thank you!'})
                     } else {
                         res.status(200).json({status: 'warning', message: 'Not enought questions'})
                     }
@@ -46,4 +46,9 @@ exports.makeAnswers = async function(req, res) {
         }).catch(e => {
             console.log(e)
         })
+}
+
+exports.checkToken = async function(req, res, next) {
+    console.log('Checktoken')
+    next()
 }

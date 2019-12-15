@@ -23,7 +23,7 @@
             >
               {{ alert.message}}
             </v-alert>
-            <v-card class="elevation-12" v-if="loader">
+            <v-card class="elevation-12" v-if="questionnairePlace">
               <v-toolbar
                 color="primary"
                 dark
@@ -86,7 +86,8 @@
           status: '',
           message: '',
           active: false
-        }
+        },
+        questionnairePlace: false
       }
     },
     props: {
@@ -102,8 +103,10 @@
         api.post(`answer/makeanswers`, {questionnaireId: this.questionnaireId, answers: formData})
         .then(data => {
           this.alert = data.data
-          console.log(this.alert)
           this.alert.active = true
+          if(data.data.status == 'success') {
+            this.questionnairePlace = false
+          }
         })
       }
     },
@@ -117,11 +120,13 @@
       })
       .then(() => {
         this.loader = true
+        this.questionnairePlace = true
       })
       .catch((err) => {
         this.alert.message = err
         this.alert.status = 'error'
         this.alert.active = true
+        this.loader = true
       })
     }
   }
