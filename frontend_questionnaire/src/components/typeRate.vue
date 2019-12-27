@@ -16,7 +16,7 @@ export default {
         rating: function(){
             this.$store.dispatch('addAnswer', {
                 questionId: this.questionId,
-                answer: this.rating
+                answer: this.rating 
             })
         }
     }
